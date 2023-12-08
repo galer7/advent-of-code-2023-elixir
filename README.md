@@ -2,5 +2,5 @@
 
 My solutions as I learn Elixir.
 
-- Follow along at [Advent of Code](https://adventofcode.com/2023).
+- Follow along at [Advent of Code 2023](https://adventofcode.com/2023).
 - Checkout Elixir guide on [Hex Docs](https://hexdocs.pm/elixir/main/introduction.html).
