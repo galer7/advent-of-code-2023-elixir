@@ -1,9 +1,7 @@
 # Problem text: https://adventofcode.com/2023/day/3
 
-defmodule GearRatios do
+defmodule AOC2023.GearRatios do
   def solve do
-    IO.puts("[solve] Starting")
-
     path = relative_from_here("input.txt")
 
     lines =
@@ -14,15 +12,9 @@ defmodule GearRatios do
 
     part_numbers = get_all_part_numbers(lines)
 
-    IO.inspect(part_numbers, limit: :infinity)
-
-    result =
-      Enum.reduce(part_numbers, 0, fn number, acc ->
-        number + acc
-      end)
-
-    IO.puts("[solve] Result: #{result}")
-    IO.puts("[solve] Done")
+    Enum.reduce(part_numbers, 0, fn number, acc ->
+      number + acc
+    end)
   end
 
   # For each line, keep current number formation, and then check if is near a symbol
@@ -32,7 +24,7 @@ defmodule GearRatios do
     |> Enum.map(fn {row, y0} ->
       good_numbers_from_row =
         row
-        |> get_numbers_with_x0_from_row(y0, length(rows))
+        |> get_numbers_with_x0_from_row()
         |> Enum.filter(fn {number, x0} ->
           is_number_part_number?(number, rows, x0, y0)
         end)
@@ -45,11 +37,7 @@ defmodule GearRatios do
     |> List.flatten()
   end
 
-  defp get_numbers_with_x0_from_row(row, y_row, rows_count) do
-    digits_of_rows_count = rows_count |> Integer.to_string() |> String.length()
-    log_prefix_zero_padded = String.pad_leading("#{y_row}", digits_of_rows_count, "0")
-    IO.puts("[#{log_prefix_zero_padded}] Row: #{row}")
-
+  defp get_numbers_with_x0_from_row(row) do
     pattern = ~r/\d+/
     matches = Regex.scan(pattern, row)
     matches_indexes = Regex.scan(pattern, row, return: :index)
@@ -81,15 +69,7 @@ defmodule GearRatios do
     bounding_box_points = get_bounding_box_points(number_len, matrix_h, matrix_w, x0, y0)
 
     Enum.any?(bounding_box_points, fn {x, y} ->
-      is_symbol? = is_symbol?(String.at(Enum.at(rows, y), x))
-
-      if is_symbol? do
-        IO.puts(
-          "[is_number_part_number?] #{number} is a part number because of symbol at #{x}, #{y} (#{String.at(Enum.at(rows, y), x)})"
-        )
-      end
-
-      is_symbol?
+      is_symbol?(String.at(Enum.at(rows, y), x))
     end)
   end
 
@@ -106,7 +86,7 @@ defmodule GearRatios do
         Enum.map(x_left..x_right, fn x ->
           {x, y_top}
         end)
-        |> Enum.filter(fn {x, y} ->
+        |> Enum.filter(fn {x, _y} ->
           x >= 0 && x < matrix_w
         end)
       end
@@ -118,7 +98,7 @@ defmodule GearRatios do
         Enum.map(x_left..x_right, fn x ->
           {x, y_bottom}
         end)
-        |> Enum.filter(fn {x, y} ->
+        |> Enum.filter(fn {x, _y} ->
           x >= 0 && x < matrix_w
         end)
       end
@@ -136,11 +116,6 @@ defmodule GearRatios do
       else
         [{x_right, y0}]
       end
-
-    IO.inspect(top_line: top_line)
-    IO.inspect(bottom_line: bottom_line)
-    IO.inspect(left_line: left_line)
-    IO.inspect(right_line: right_line)
 
     top_line ++ bottom_line ++ left_line ++ right_line
   end
@@ -173,5 +148,3 @@ defmodule GearRatios do
     new_path
   end
 end
-
-GearRatios.solve()

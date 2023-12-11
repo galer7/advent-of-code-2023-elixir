@@ -3,47 +3,38 @@
 # Issues that I faced:
 # - I don't know what return type format to use for the functions. Function names are not enough pretty good to understand what they do.
 
-defmodule CubeConundrum do
+defmodule AOC2023.CubeConundrum do
   def solve do
     games = read_file(relative_from_here("input.txt"))
 
     map_max_cubes =
       %{"red" => 12, "green" => 13, "blue" => 14}
 
-    result =
-      Enum.reduce(games, 0, fn line, acc ->
-        case String.trim(line) do
-          "" ->
-            acc
+    Enum.reduce(games, 0, fn line, acc ->
+      case String.trim(line) do
+        "" ->
+          acc
 
-          _ ->
-            [game_id_str, game_line] = String.split(line, ":")
+        _ ->
+          [game_id_str, game_line] = String.split(line, ":")
 
-            subsets =
-              get_array_of_subset_maps(game_line)
+          subsets =
+            get_array_of_subset_maps(game_line)
 
-            IO.puts("[solve] subsets: #{inspect(subsets)}")
+          is_current_game_valid =
+            is_game_valid(subsets, map_max_cubes)
 
-            is_current_game_valid =
-              is_game_valid(subsets, map_max_cubes)
+          case is_current_game_valid do
+            true ->
+              {game_id, _} = String.split(game_id_str, " ") |> List.last() |> Integer.parse()
 
-            case is_current_game_valid do
-              true ->
-                {game_id, _} = String.split(game_id_str, " ") |> List.last() |> Integer.parse()
+              acc + game_id
 
-                IO.inspect(label: "[solve] Game #{game_id_str} is valid")
-
-                acc + game_id
-
-              false ->
-                IO.puts("[solve] Game #{game_id_str} is invalid")
-
-                acc
-            end
-        end
-      end)
-
-    IO.puts("[solve] result: #{result}")
+            false ->
+              acc
+          end
+      end
+    end)
   end
 
   # returns [%{red: count_red, green: count_green, blue: count_blue}, %{red: count_red_2, green: count_green_2, blue: count_blue_2}]
@@ -67,21 +58,18 @@ defmodule CubeConundrum do
   defp get_subset_str(game_line) do
     game_line
     |> String.split(";", trim: true)
-    |> IO.inspect(label: "[get_subset_str] game_line")
   end
 
   # returns ["count_red red", "count_green green", "count_blue blue"]
   def get_cubes_str(subset_str) do
     subset_str
     |> String.split(",", trim: true)
-    |> IO.inspect(label: "[get_cubes_str] cubes_str")
   end
 
   # returns ["count_red", "red"]
   def get_cube_count_and_color(cube_str) do
     cube_str
     |> String.split(" ", trim: true)
-    |> IO.inspect(label: "[get_cube_count_and_color] count_and_color")
   end
 
   # subsets is of type [%{red: R1, green: G1, blue: B1}, %{red: R2, green: G2, blue: B2}]
@@ -122,5 +110,3 @@ defmodule CubeConundrum do
     new_path
   end
 end
-
-CubeConundrum.solve()
