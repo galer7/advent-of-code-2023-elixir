@@ -52,7 +52,7 @@ defmodule AOC2023.TrebuchetPart2 do
 
   Examples:
 
-      iex> AOC2023.TrebuchetPart2.line_to_num_str("one123two456three789")
+      iex> AOC2023.TrebuchetPart2.line_to_num_str("one1239")
       "19"
 
       iex> AOC2023.TrebuchetPart2.line_to_num_str("123")

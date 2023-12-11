@@ -1,95 +1,139 @@
 # Problem text: https://adventofcode.com/2023/day/2
 
-# Issues that I faced:
-# - I don't know what return type format to use for the functions. Function names are not enough pretty good to understand what they do.
-
 defmodule AOC2023.CubeConundrum do
   def solve do
     games = read_file(relative_from_here("input.txt"))
 
-    map_max_cubes =
-      %{"red" => 12, "green" => 13, "blue" => 14}
+    do_solve(games)
+  end
 
-    Enum.reduce(games, 0, fn line, acc ->
-      case String.trim(line) do
-        "" ->
-          acc
+  def do_solve(games) do
+    goal_game_cubes = %{
+      red: 12,
+      green: 13,
+      blue: 14
+    }
 
-        _ ->
-          [game_id_str, game_line] = String.split(line, ":")
+    games
+    |> Enum.map(fn game ->
+      game_id = get_game_id(game)
+      game_sets = get_games_sets(game)
 
-          subsets =
-            get_array_of_subset_maps(game_line)
-
-          is_current_game_valid =
-            is_game_valid(subsets, map_max_cubes)
-
-          case is_current_game_valid do
-            true ->
-              {game_id, _} = String.split(game_id_str, " ") |> List.last() |> Integer.parse()
-
-              acc + game_id
-
-            false ->
-              acc
-          end
+      if check_if_game_is_valid(game_sets, goal_game_cubes) do
+        game_id
+      else
+        nil
       end
     end)
+    |> Enum.filter(&(&1 != nil))
+    |> Enum.sum()
   end
 
-  # returns [%{red: count_red, green: count_green, blue: count_blue}, %{red: count_red_2, green: count_green_2, blue: count_blue_2}]
-  defp get_array_of_subset_maps(game_line) do
-    game_line
-    |> get_subset_str()
-    |> Enum.map(&get_cubes_str/1)
-    |> Enum.map(fn cubes_str ->
-      cubes_str
-      |> Enum.map(&get_cube_count_and_color/1)
-      |> Enum.map(fn [count_str, color_str] ->
-        {count, _} = Integer.parse(count_str)
+  @doc """
+  Parse a line of the calibration document.
 
-        {color_str, count}
-      end)
-      |> Enum.into(%{})
+  Returns the first and last digit (as a string) of the calibration value.
+
+  Examples:
+
+      iex> AOC2023.CubeConundrum.get_games_sets("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")
+      [%{blue: 3, red: 4}, %{red: 1, green: 2, blue: 6}, %{green: 2}]
+  """
+  def get_games_sets(game) do
+    game
+    |> String.split(": ", trim: true)
+    |> List.last()
+    |> String.split("; ", trim: true)
+    |> Enum.map(&parse_game_set/1)
+  end
+
+  @doc """
+  Check if game is valid, meaning all game sets of the game are valid.
+
+  Returns true if all game sets are valid, false otherwise.
+
+  Examples:
+
+      iex> AOC2023.CubeConundrum.check_if_game_is_valid([%{blue: 3, red: 4}, %{red: 1, green: 2, blue: 6}, %{green: 2}], %{red: 12, green: 13, blue: 14})
+      true
+
+      iex> AOC2023.CubeConundrum.check_if_game_is_valid([%{blue: 3, red: 4}, %{red: 1, green: 2, blue: 6}, %{green: 100}], %{red: 12, green: 13, blue: 14})
+      false
+  """
+  def check_if_game_is_valid(all_game_sets, goal_game_cubes) do
+    Enum.all?(all_game_sets, fn game_set ->
+      check_if_game_set_is_valid(game_set, goal_game_cubes)
     end)
   end
 
-  # returns ["count_red red, count_green green, count_blue blue", "count_red_2 red, count_green_2 green, count_blue_2 blue"]
-  defp get_subset_str(game_line) do
-    game_line
-    |> String.split(";", trim: true)
-  end
-
-  # returns ["count_red red", "count_green green", "count_blue blue"]
-  def get_cubes_str(subset_str) do
-    subset_str
-    |> String.split(",", trim: true)
-  end
-
-  # returns ["count_red", "red"]
-  def get_cube_count_and_color(cube_str) do
-    cube_str
+  def get_game_id(game) do
+    game
+    |> String.split(": ", trim: true)
+    |> List.first()
     |> String.split(" ", trim: true)
+    |> List.last()
+    |> String.to_integer()
   end
 
-  # subsets is of type [%{red: R1, green: G1, blue: B1}, %{red: R2, green: G2, blue: B2}]
-  defp is_game_valid(subsets, map_max_cubes) do
-    Enum.all?(subsets, fn subset ->
-      is_subset_valid(subset, map_max_cubes)
+  @doc """
+  Check if game set is valid, meaning all game cubes of the game set are valid.
+
+  Returns true if all game cubes are valid, false otherwise.
+
+  Examples:
+
+      iex> AOC2023.CubeConundrum.check_if_game_set_is_valid(%{blue: 3, red: 4}, %{red: 12, green: 13, blue: 14})
+      true
+
+      iex> AOC2023.CubeConundrum.check_if_game_set_is_valid(%{blue: 3, red: 100}, %{red: 12, green: 13, blue: 14})
+      false
+  """
+  def check_if_game_set_is_valid(game_set, goal_game_cubes) do
+    Enum.all?(goal_game_cubes, fn {color, count} ->
+      count >= Map.get(game_set, color, 0)
     end)
   end
 
-  # subset is of type %{red: 1, green: 2, blue: 3}
-  defp is_subset_valid(subset, map_max_cubes) do
-    Enum.all?(subset, fn {color, count} ->
-      case Map.get(map_max_cubes, color) do
-        nil ->
-          raise "Invalid color: #{color}"
+  @doc """
+  Parse a game set.
 
-        max_cubes ->
-          count <= max_cubes
-      end
+  Examples:
+
+      iex> AOC2023.CubeConundrum.parse_game_set("3 blue, 4 red")
+      %{blue: 3, red: 4}
+
+      iex> AOC2023.CubeConundrum.parse_game_set("1 red, 2 green, 6 blue")
+      %{red: 1, green: 2, blue: 6}
+
+      iex> AOC2023.CubeConundrum.parse_game_set("2 green")
+      %{green: 2}
+  """
+  def parse_game_set(game_set) do
+    game_set
+    |> String.split(",", trim: true)
+    |> Enum.map(&parse_game_cube/1)
+    |> Enum.reduce(%{}, fn {count, color}, acc ->
+      Map.put(acc, color, count)
     end)
+  end
+
+  @doc """
+  Parse a game cube.
+
+  Examples:
+
+      iex> AOC2023.CubeConundrum.parse_game_cube("3 blue")
+      {3, :blue}
+
+      iex> AOC2023.CubeConundrum.parse_game_cube("4 red")
+      {4, :red}
+
+      iex> AOC2023.CubeConundrum.parse_game_cube("2 green")
+      {2, :green}
+  """
+  def parse_game_cube(game_cube) do
+    [count, color] = String.split(game_cube, " ", trim: true)
+    {String.to_integer(count), String.to_atom(color)}
   end
 
   defp read_file(path) do

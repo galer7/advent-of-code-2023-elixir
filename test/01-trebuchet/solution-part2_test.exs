@@ -2,7 +2,7 @@ defmodule AOC2023.TrebuchetPart2Test do
   use ExUnit.Case
   doctest AOC2023.TrebuchetPart2
 
-  test "should run example 1" do
+  test "should run example" do
     input = "two1nine
 eightwothree
 abcone2threexyz
