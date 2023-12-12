@@ -9,6 +9,7 @@ defmodule AOC2023 do
     IO.puts("[Day 2] Cube Conundrum, part 1 #{AOC2023.CubeConundrum.solve()}")
     IO.puts("[Day 2] Cube Conundrum, part 2 #{AOC2023.CubeConundrumPart2.solve()}")
     IO.puts("[Day 3] Part Numbers, part 1 #{AOC2023.GearRatios.solve()}")
+    IO.puts("[Day 3] Part Numbers, part 2 #{AOC2023.GearRatiosPart2.solve()}")
 
     IO.puts("[AOC2023] Done")
 

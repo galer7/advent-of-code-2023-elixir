@@ -1,6 +1,6 @@
 # Problem text: https://adventofcode.com/2023/day/3
 
-defmodule AOC2023.GearRatios do
+defmodule AOC2023.GearRatiosPart2 do
   def solve do
     path = relative_from_here("input.txt")
 
@@ -15,12 +15,22 @@ defmodule AOC2023.GearRatios do
     numbers = get_all_numbers(lines)
 
     symbols
-    |> Enum.reduce([], fn sym, acc ->
-      acc ++ get_part_numbers_for_symbol(sym, numbers)
+    |> Enum.reduce(0, fn sym, acc ->
+      part_numbers_for_symbol = get_part_numbers_for_symbol(sym, numbers)
+
+      if is_symbol_a_gear?(part_numbers_for_symbol) do
+        acc +
+          (part_numbers_for_symbol
+           |> Enum.map(fn %{value: value} -> value end)
+           |> Enum.product())
+      else
+        acc
+      end
     end)
-    |> Enum.uniq()
-    |> Enum.map(fn %{value: value} -> value end)
-    |> Enum.sum()
+  end
+
+  def is_symbol_a_gear?(part_numbers_for_symbol) do
+    length(part_numbers_for_symbol) == 2
   end
 
   @doc """
