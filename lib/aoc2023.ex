@@ -12,6 +12,8 @@ defmodule AOC2023 do
     IO.puts("[Day 3] Part Numbers, part 2 #{AOC2023.GearRatiosPart2.solve()}")
     IO.puts("[Day 4] Scratch Cards, part 1 #{AOC2023.ScratchCards.solve()}")
     IO.puts("[Day 4] Scratch Cards, part 2 #{AOC2023.ScratchCardsPart2.solve()}")
+    IO.puts("[Day 5] Fertilizer, part 1 #{AOC2023.Fertilizer.solve()}")
+    IO.puts("[Day 5] Fertilizer, part 2 #{AOC2023.FertilizerPart2.solve()}")
 
     IO.puts("[AOC2023] Done")
 
