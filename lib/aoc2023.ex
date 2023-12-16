@@ -21,6 +21,7 @@ defmodule AOC2023 do
     IO.puts("[Day 8] Haunted Wasteland, part 1 #{AOC2023.HauntedWasteland.solve()}")
     IO.puts("[Day 8] Haunted Wasteland, part 2 #{AOC2023.HauntedWastelandPart2.solve()}")
     IO.puts("[Day 9] Mirage Maintenance, part 1 #{AOC2023.MirageMaintenance.solve()}")
+    IO.puts("[Day 9] Mirage Maintenance, part 2 #{AOC2023.MirageMaintenancePart2.solve()}")
 
     IO.puts("[AOC2023] Done")
 
