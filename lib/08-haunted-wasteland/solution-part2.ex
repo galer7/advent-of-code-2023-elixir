@@ -1,4 +1,4 @@
-defmodule AOC2023.HauntedWasteland do
+defmodule AOC2023.HauntedWastelandPart2 do
   def solve do
     path = relative_from_here("input.txt")
 
@@ -11,20 +11,42 @@ defmodule AOC2023.HauntedWasteland do
   def do_solve(lines) do
     instructions = get_lr_instructions(lines)
     map = get_map(lines)
+    starting_nodes = get_starting_nodes(map)
 
-    acc = %{idx: 0, current_node: "AAA", count: 0}
+    starting_nodes
+    |> Enum.map(fn starting_node ->
+      acc = %{idx: 0, current_node: starting_node, count: 0}
 
-    %{count: count} =
-      while_loop(
-        instructions,
-        map,
-        fn acc ->
-          acc.current_node == "ZZZ"
-        end,
-        acc
-      )
+      %{count: count} =
+        while_loop(
+          instructions,
+          map,
+          fn acc ->
+            String.ends_with?(acc.current_node, "Z")
+          end,
+          acc
+        )
 
-    count
+      count
+    end)
+    |> Enum.reduce(1, fn count, acc ->
+      lcm(count, acc)
+    end)
+  end
+
+  def lcm(a, b) do
+    (a * b / gcd(a, b)) |> trunc()
+  end
+
+  def gcd(a, 0), do: a
+  def gcd(a, b), do: gcd(b, rem(a, b))
+
+  def get_starting_nodes(map) do
+    map
+    |> Map.keys()
+    |> Enum.filter(fn node ->
+      String.ends_with?(node, "A")
+    end)
   end
 
   def while_loop(instructions, map, cond_fn, acc) do

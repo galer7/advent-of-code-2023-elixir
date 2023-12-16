@@ -19,6 +19,7 @@ defmodule AOC2023 do
     IO.puts("[Day 7] Camel Poker, part 1 #{AOC2023.CamelPoker.solve()}")
     IO.puts("[Day 7] Camel Poker, part 2 #{AOC2023.CamelPokerPart2.solve()}")
     IO.puts("[Day 8] Haunted Wasteland, part 1 #{AOC2023.HauntedWasteland.solve()}")
+    IO.puts("[Day 8] Haunted Wasteland, part 2 #{AOC2023.HauntedWastelandPart2.solve()}")
 
     IO.puts("[AOC2023] Done")
 
