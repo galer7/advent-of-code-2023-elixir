@@ -1,3 +1,5 @@
+# Problem text: https://adventofcode.com/2023/day/7
+
 defmodule AOC2023.CamelPokerPart2 do
   def solve do
     path = relative_from_here("input.txt")
@@ -58,6 +60,7 @@ defmodule AOC2023.CamelPokerPart2 do
 
   @doc """
   Returns the hand as a list of lists, where each inner list contains the card and the number of times it occurs in the hand.
+  The returned list is sorted by the rank of the cards.
 
   Example:
       iex> AOC2023.CamelPokerPart2.extract_hand_from_cards(["2", "2", "3", "3", "3"])

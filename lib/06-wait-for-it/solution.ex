@@ -1,3 +1,5 @@
+# Problem text: https://adventofcode.com/2023/day/6
+
 defmodule AOC2023.WaitForIt do
   def solve do
     path = relative_from_here("input.txt")

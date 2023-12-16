@@ -1,3 +1,5 @@
+# Problem text: https://adventofcode.com/2023/day/9
+
 defmodule AOC2023.MirageMaintenance do
   def solve do
     path = relative_from_here("input.txt")
