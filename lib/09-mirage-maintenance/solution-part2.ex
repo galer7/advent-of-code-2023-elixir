@@ -28,7 +28,7 @@ defmodule AOC2023.MirageMaintenancePart2 do
   end
 
   @doc """
-  Get extrapolated value from history entry
+  Get extrapolated value from history entry.
 
   Examples:
       iex> AOC2023.MirageMaintenancePart2.get_extrapolated_value_from_history_entry([1, 2, 3, 4], [])
@@ -59,11 +59,12 @@ defmodule AOC2023.MirageMaintenancePart2 do
     #   "current_history_seq: #{inspect(current_history_seq)}, history_seqs: #{inspect(history_seqs)}"
     # )
 
-    # The all-zeros sequence is not present in the history_seqs
     is_current_seq_all_zeros? = Enum.all?(current_history_seq, fn value -> value == 0 end)
 
     if is_current_seq_all_zeros? do
       Enum.reverse(history_seqs)
+      # The all-zeros sequence is not appended
+      # to history_seqs, so we don't need to drop it
       |> Enum.reduce(0, fn seq, acc ->
         first_value_from_seq = Enum.at(seq, 0)
         first_value_from_seq - acc

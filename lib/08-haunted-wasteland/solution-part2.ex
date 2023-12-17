@@ -55,7 +55,7 @@ defmodule AOC2023.HauntedWastelandPart2 do
     if cond_fn.(acc) do
       acc
     else
-      next_move = (Enum.at(instructions, acc.idx) == "L" && :left) || :right
+      next_move = if Enum.at(instructions, acc.idx) == "L", do: :left, else: :right
 
       new_idx = rem(acc.idx + 1, length(instructions))
 

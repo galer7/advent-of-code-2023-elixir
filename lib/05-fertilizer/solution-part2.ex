@@ -151,7 +151,7 @@ defmodule AOC2023.FertilizerPart2 do
   end
 
   def get_common_interval([a_start, a_end], [b_start, b_end]) do
-    if b_start > a_end || a_start > b_end do
+    if b_start > a_end or a_start > b_end do
       nil
     else
       [max(a_start, b_start), min(a_end, b_end)]

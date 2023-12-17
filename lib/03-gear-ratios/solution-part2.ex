@@ -40,10 +40,10 @@ defmodule AOC2023.GearRatiosPart2 do
   def get_part_numbers_for_symbol(%{x: sym_x, y: sym_y}, numbers) do
     numbers
     |> Enum.filter(fn %{y: num_y} ->
-      is_on_neighbouring_lines? = abs(num_y - sym_y) == 1
+      is_on_neighboring_lines? = abs(num_y - sym_y) == 1
       is_on_same_line? = num_y == sym_y
 
-      is_on_neighbouring_lines? || is_on_same_line?
+      is_on_neighboring_lines? or is_on_same_line?
     end)
     |> Enum.filter(fn %{x: num_x, value: num_value} ->
       num_length = num_value |> Integer.to_string() |> String.length()

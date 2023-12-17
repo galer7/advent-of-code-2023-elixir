@@ -33,7 +33,7 @@ defmodule AOC2023.GearRatios do
       is_on_neighbouring_lines? = abs(num_y - sym_y) == 1
       is_on_same_line? = num_y == sym_y
 
-      is_on_neighbouring_lines? || is_on_same_line?
+      is_on_neighbouring_lines? or is_on_same_line?
     end)
     |> Enum.filter(fn %{x: num_x, value: num_value} ->
       num_length = num_value |> Integer.to_string() |> String.length()
